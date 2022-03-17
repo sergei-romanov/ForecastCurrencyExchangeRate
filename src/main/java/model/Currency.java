@@ -1,6 +1,5 @@
 package model;
 
-import exception.CurrencyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,14 +10,8 @@ public enum Currency {
     AMD("Армянский драм"),
     BGN("Болгарский лев");
     private static final Logger LOG = LoggerFactory.getLogger(Currency.class);
-    private final String name;
 
     Currency(String title) {
-        this.name = title;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public static Currency getCurrency(String title) {
@@ -29,8 +22,21 @@ public enum Currency {
             case "Армянский драм" -> Currency.AMD;
             case "Болгарский лев" -> Currency.BGN;
             default -> {
-                LOG.error("Некорректный тип валюты: {}", title);
-                throw new CurrencyException();
+                LOG.error("Некорректная стока для извлечения типа валюты : {}", title);
+                yield null;
+            }
+        };
+    }
+    public static Currency parseCurrency(String title) {
+        return switch (title.toUpperCase()) {
+            case "USD" -> Currency.USD;
+            case "EUR" -> Currency.EUR;
+            case "TRY" -> Currency.TRY;
+            case "AMD" -> Currency.AMD;
+            case "BGN" -> Currency.BGN;
+            default -> {
+                LOG.error("Некорректная аббревиатура для извлечения типа валюты : {}", title);
+                yield null;
             }
         };
     }
