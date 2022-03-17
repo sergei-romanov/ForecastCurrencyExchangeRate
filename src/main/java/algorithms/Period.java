@@ -1,6 +1,8 @@
 package algorithms;
 
 public enum Period {
-    DAY,
-    WEEK
+    DATA,
+    TOMORROW,
+    WEEK,
+    MONTH
 }
