@@ -1,8 +1,8 @@
 package Storage;
 
+import model.Csv;
 import model.Rate;
 import org.junit.jupiter.api.Test;
-import storage.Csv;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ class CsvTest {
     @Test
     void parseCsvFromTable() {
         var path = Path.of("src/test/resources/CsvHelper.txt");
-        var csv = Csv.createCsv(path);
+        var csv = new Csv(path);
         var table = csv.getTable();
         List<String> actual = new ArrayList<>();
-       table.stream().map(Rate::toString).forEach(actual::add);
+        table.values().stream().sorted().map(Rate::toString).forEach(actual::add);
         var expect = List.of(
                 "1 05.03.2022 7.44 TRY",
                 "1 04.03.2022 7.90 TRY",
@@ -32,15 +32,6 @@ class CsvTest {
                 "1 25.02.2022 6.15 TRY",
                 "1 24.02.2022 5.84 TRY",
                 "1 23.02.2022 5.84 TRY");
-        assertThat(actual).isEqualTo(expect);
-    }
-
-    @Test
-    void parseCsvFromTableHeader() {
-        var path = Path.of("src/test/resources/CsvHelper.txt");
-        var csv = Csv.createCsv(path);
-        var actual = csv.getHeader();
-        String[] expect = {"nominal", "data", "curs", "cdx"};
         assertThat(actual).isEqualTo(expect);
     }
 }
