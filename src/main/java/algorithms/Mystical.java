@@ -80,9 +80,9 @@ public class Mystical extends Algorithm {
         return min.add(range.multiply(BigDecimal.valueOf(Math.random())));
     }
 
-    private List<LocalDate> getLastThreeMoonPhase() {
+    private static List<LocalDate> getLastThreeMoonPhase() {
         LocalDate dateNow = LocalDate.now();
-        LocalDate date = dateNow.minusYears(1);
+        LocalDate date = dateNow.minusYears(2);
         List<LocalDate> moon = new ArrayList<>();
         MoonPhase.Parameters parameters = MoonPhase.compute()
                 .phase(MoonPhase.Phase.FULL_MOON);
@@ -95,7 +95,7 @@ public class Mystical extends Algorithm {
                     .toLocalDate();
             if (nextFullMoon.getYear() == dateNow.getYear()
                     && nextFullMoon.getMonth() == dateNow.getMonth()
-                    && nextFullMoon.getDayOfMonth() > dateNow.getDayOfMonth()) {
+                    && nextFullMoon.getDayOfMonth() >= dateNow.getDayOfMonth()) {
                 break;
             }
             moon.add(nextFullMoon);
@@ -105,5 +105,4 @@ public class Mystical extends Algorithm {
                 .skip(moon.size() - 3)
                 .collect(Collectors.toList());
     }
-
 }
