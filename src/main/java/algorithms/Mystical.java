@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+
 /**
  * Алгоритм “Мистический”
  * - Для расчета на дату используем среднее арифметическое из трех последних от этой даты полнолуний.
@@ -24,7 +25,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * случайное число от -10% до +10% от значения предыдущей даты.
  */
 public class Mystical extends Algorithm {
-    private final static LocalDate LAST_DATE_WITH_CURRENT_DATA = LocalDate.of(2022,3,5);
     private static final Logger LOG = LoggerFactory.getLogger(Mystical.class);
 
     public Mystical(Storage storage) {
@@ -80,8 +80,9 @@ public class Mystical extends Algorithm {
         return min.add(range.multiply(BigDecimal.valueOf(Math.random())));
     }
 
-    private static List<LocalDate> getLastThreeMoonPhase() {
-        LocalDate date = LAST_DATE_WITH_CURRENT_DATA.minusYears(2);
+    private List<LocalDate> getLastThreeMoonPhase() {
+        LocalDate dateNow = LocalDate.now();
+        LocalDate date = dateNow.minusYears(1);
         List<LocalDate> moon = new ArrayList<>();
         MoonPhase.Parameters parameters = MoonPhase.compute()
                 .phase(MoonPhase.Phase.FULL_MOON);
@@ -92,7 +93,9 @@ public class Mystical extends Algorithm {
             LocalDate nextFullMoon = moonPhase
                     .getTime()
                     .toLocalDate();
-            if (nextFullMoon.isAfter(LAST_DATE_WITH_CURRENT_DATA)) {
+            if (nextFullMoon.getYear() == dateNow.getYear()
+                    && nextFullMoon.getMonth() == dateNow.getMonth()
+                    && nextFullMoon.getDayOfMonth() > dateNow.getDayOfMonth()) {
                 break;
             }
             moon.add(nextFullMoon);
@@ -102,4 +105,5 @@ public class Mystical extends Algorithm {
                 .skip(moon.size() - 3)
                 .collect(Collectors.toList());
     }
+
 }
